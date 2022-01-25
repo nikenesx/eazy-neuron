@@ -1,26 +1,24 @@
-from math import exp
-from mpmath import mp
+import numpy as np
 
 
 def sigmoid(x):
     """Сигмоидальная функция активации"""
-    return 1 / (1 + mp.exp(-x))
+    return np.float16(1 / (1 + mp.exp(-x)))
 
 
 def relu(x):
     """Функция акцивации ReLu"""
-    return x if x > 0 else 0
+    return np.float64(x if x > 0 else 0)
 
 
-def softmax(x, neurons_inputs):
+def softmax(neurons_inputs):
     """
     Функция активации softmax
 
-    :param x: входное значение текущего нейрона
     :param neurons_inputs: список с входными значениями остальных нейронов текущего слоя
     :return: выходное значение нейрона
     """
-    return mp.exp(x) / sum([mp.exp(value) for value in neurons_inputs])
+    return np.float16(np.exp(neurons_inputs) / np.sum(neurons_inputs))
 
 
 ACTIVATION_FUNCTIONS = {
