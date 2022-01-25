@@ -2,6 +2,7 @@ import numpy as np
 
 
 class Neuron:
+    """Класс Нейрон"""
     def __init__(self, weights=None, activation_func=None):
         self.weights = weights
         self.activation_func = activation_func
