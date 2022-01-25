@@ -16,19 +16,19 @@ def train():
     x_train = x_train / 255
 
     model = Network(
-        InputLayer(784),
-        HiddenLayer(10, 'sigmoid'),
-        OutputLayer(10, 'softmax')
+        InputLayer(2),
+        OutputLayer(2, 'softmax')
     )
     model.configure()
-    model.train(x_train, y_train, batch_size=32)
-
-    x = np.expand_dims(x_test[0], axis=0)
-    a = model.predict(x)
-    print(a)
-
-    plt.imshow(x_test[0], cmap=plt.cm.binary)
-    plt.show()
+    print(model.through(np.array([0, 1])))
+    # model.train(x_train, y_train, batch_size=32)
+    #
+    # x = np.expand_dims(x_test[0], axis=0)
+    # a = model.predict(x)
+    # print(a)
+    #
+    # plt.imshow(x_test[0], cmap=plt.cm.binary)
+    # plt.show()
 
 
 if __name__ == '__main__':

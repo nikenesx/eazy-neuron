@@ -23,7 +23,7 @@ class Network:
 
         # Задаём значения для нейронов входного слоя
         for i in range(len(vector)):
-            self.layers[0].neurons[i].output = vector[i]
+            self.layers[0].neurons[i].output = np.iuintvector[i]
 
         for layer_index in range(1, len(self.layers) - 1):
             pred_layer_outputs = self.layers[layer_index - 1].get_neurons_outputs()
@@ -36,6 +36,8 @@ class Network:
         last_layer_neurons_inputs = np.array([neuron.input for neuron in self.layers[-1].neurons], dtype=np.float64)
         for neuron in self.layers[-1].neurons:
             neuron.output = neuron.activation_func(last_layer_neurons_inputs)
+
+        return self.layers[-1].get_neurons_outputs()
 
     def predict(self, v):
         vector = v
