@@ -12,13 +12,16 @@ class Network:
         self.lambda_s = 0.001
 
     def through(self, vector):
+        # Проверяем что сеть сконфигурирована
         if self.layers is None:
             raise NotConfiguredNetwork
 
+        # Проверяем корректность входного вектора
         vector = vector.flatten()
         if len(vector) != self.layers[0].neurons_count:
             raise UncorrectInputError
 
+        # Задаём значения для нейронов входного слоя
         for i in range(len(vector)):
             self.layers[0].neurons[i].output = vector[i]
 
@@ -26,6 +29,13 @@ class Network:
             pred_layer_outputs = self.layers[layer_index - 1].get_neurons_outputs()
             for neuron in self.layers[layer_index].neurons:
                 neuron.set_output(pred_layer_outputs)
+
+        pred_layer_outputs = self.layers[-2].get_neurons_outputs()
+        for neuron in self.layers[-1].neurons:
+            neuron.input = np.dot(neuron.weights, pred_layer_outputs)
+        last_layer_neurons_inputs = np.array([neuron.input for neuron in self.layers[-1].neurons], dtype=np.float64)
+        for neuron in self.layers[-1].neurons:
+            neuron.output = neuron.activation_func(last_layer_neurons_inputs)
 
     def predict(self, v):
         vector = v
