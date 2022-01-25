@@ -21,3 +21,8 @@ class HiddenLayerError(Exception):
 class UncorrectInputError(Exception):
     def __str__(self):
         return 'Длина входного вектора не соответствует количеству нейронов входного слоя.'
+
+
+class NotConfiguredNetwork(Exception):
+    def __str__(self):
+        return 'Сеть не была сконфигурирована.'

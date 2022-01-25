@@ -1,7 +1,7 @@
 import numpy as np
 
 from layers import InputLayer, HiddenLayer, OutputLayer
-from exceptions import FirstLayerError, HiddenLayerError, LastLayerError, UncorrectInputError
+from exceptions import FirstLayerError, HiddenLayerError, LastLayerError, UncorrectInputError, NotConfiguredNetwork
 from Neuron import Neuron
 
 
@@ -10,6 +10,22 @@ class Network:
         self._check_layers(layers)
         self.layers = layers
         self.lambda_s = 0.001
+
+    def through(self, vector):
+        if self.layers is None:
+            raise NotConfiguredNetwork
+
+        vector = vector.flatten()
+        if len(vector) != self.layers[0].neurons_count:
+            raise UncorrectInputError
+
+        for i in range(len(vector)):
+            self.layers[0].neurons[i].output = vector[i]
+
+        for layer_index in range(1, len(self.layers) - 1):
+            pred_layer_outputs = self.layers[layer_index - 1].get_neurons_outputs()
+            for neuron in self.layers[layer_index].neurons:
+                neuron.set_output(pred_layer_outputs)
 
     def predict(self, v):
         vector = v
@@ -38,8 +54,10 @@ class Network:
 
     def configure(self):
         """
+        Конфигурация нейронной сети.
+
         Создаем нейроны для скрытых слоёв и задаем случайные веса для входных связей каждого нейрона.
-        Количество входов для каждого нейрона - это количество нейронорв на предыдущем слое
+        Количество входов для каждого нейрона - это количество нейронорв на предыдущем слое.
         """
         for i in range(len(self.layers)):
             if i == 0:
@@ -51,7 +69,7 @@ class Network:
             weights_count = self.layers[i - 1].neurons_count
 
             for _ in range(self.layers[i].neurons_count):
-                weights = np.array([np.random.random() for _ in range(weights_count)])
+                weights = np.array([np.random.random() for _ in range(weights_count)], dtype=np.float16)
                 neuron = Neuron(weights, self.layers[i].activation_function)
                 neurons.append(neuron)
 
@@ -62,7 +80,6 @@ class Network:
             for neuron in self.layers[i].neurons:
                 for j in range(len(neuron.weights)):
                     neuron.weights[j] -= self.lambda_s * neuron.sum_gradients * self.layers[i - 1].neurons[j].output
-
 
     def train(self, input_data, result=None, batch_size=None, epochs=None, validation_split=None):
         """Обучение модели"""

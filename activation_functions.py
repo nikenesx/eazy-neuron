@@ -3,7 +3,7 @@ import numpy as np
 
 def sigmoid(x):
     """Сигмоидальная функция активации"""
-    return np.float16(1 / (1 + mp.exp(-x)))
+    return np.float16(1 / (1 + np.exp(-x)))
 
 
 def relu(x):

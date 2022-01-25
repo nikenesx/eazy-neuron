@@ -14,7 +14,8 @@ class Layer:
         self.neurons = None
 
     def get_neurons_outputs(self):
-        return np.array([neuron.output for neuron in self.neurons])
+        return np.array([neuron.output for neuron in self.neurons], dtype=np.float64)
+
 
 class InputLayer(Layer):
     """
